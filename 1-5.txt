@@ -1,0 +1,557 @@
+Model:
+@Entity
+public class Model {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Integer id;
+private String name; private
+String email; private String
+department; private double
+salary;
+public Integer getId() {
+return id;
+}
+public void setId(Integer id) {
+this.id = id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getEmail() {
+return email;
+}
+public void setEmail(String email) {
+this.email = email;
+}
+public String getDepartment() {
+return department;
+}
+public void setDepartment(String department) {
+this.department = department;
+}
+public double getSalary() {
+return salary;
+}
+public void setSalary(double salary) {
+this.salary = salary;
+}
+}
+Controller:
+@RestController
+public class Controller {
+@Autowired
+private Serv serv;
+@GetMapping("/employee")
+public List<Model> display(){
+return serv.get_all();
+}
+@GetMapping("/employee/{id}")
+public Model display(@PathVariable Integer id){
+return serv.get(id);
+}
+@PostMapping("/employee")
+public ResponseEntity<Model> create(@RequestBody Model m){
+return serv.create(m);
+}
+@PutMapping("/employee/{id}")
+public ResponseEntity<Model> update(@RequestBody Model m, @PathVariable Integer id){ return
+serv.update(m, id);
+}
+@DeleteMapping("/employee/{id}")
+public String delete(@PathVariable Integer id){
+return serv.delete(id);
+}
+}
+Repo:
+
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface Repo extends JpaRepository<Model, Integer> {
+}
+Service:
+@Service
+public class Serv {
+@Autowired private
+Repo repo;
+public List<Model> get_all() {
+return repo.findAll();
+}
+public ResponseEntity<Model> create(Model m) {
+repo.save(m);
+return ResponseEntity.ok(m);
+}
+public Model get(Integer id) {
+return repo.findById(id).orElse(null);
+}
+public String delete(Integer id) {
+repo.deleteById(id);
+return "deleted successfully";
+}
+public ResponseEntity<Model> update(Model m, Integer id) {
+m.setId(id);
+repo.save(m);
+return ResponseEntity.ok(m);
+}
+}
+Application Property:
+spring.application.name=ex-1
+spring.datasource.url=jdbc:mysql://localhost:3306/ex1
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.database=mysql
+spring.jpa.generate-ddl=true
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+*************************************1*****************************************
+Model:
+@Entity
+@Table(name="New")
+public class Modelclass {
+@Id
+@GeneratedValue(strategy=GenerationType.IDENTITY)
+private int id;
+private String title;
+private String author;
+private int isbn;
+private int publishedYear;
+private String genre; public
+int getId() {
+return id;
+}
+public void setId(int id) {
+this.id = id;
+}
+public String getTitle() {
+return title;
+}
+public void setTitle(String title) {
+this.title = title;
+}
+public String getAuthor() {
+return author;
+}
+public void setAuthor(String author) {
+this.author = author;
+}
+public int getIsbn() {
+return isbn;
+}
+public void setIsbn(int isbn) {
+this.isbn = isbn;
+}
+public int getPublishedYear() {
+return publishedYear;
+}
+public void setPublishedYear(int publishedYear) {
+this.publishedYear = publishedYear;
+}
+public String getGenre() {
+return genre;
+}
+public void setGenre(String genre) {
+this.genre = genre;
+}
+}
+Controller:
+@RestController
+public class Controller {
+@Autowired
+service s;
+@GetMapping("/get")
+public List<Modelclass> getdata(){
+return s.getall();
+}
+@PostMapping("/save")
+public String save(@RequestBody Modelclass m) {
+s.add(m);
+return "added";
+}
+@PutMapping("/update/{id}")
+public String update(@PathVariable int id, @RequestBody Modelclass model) {
+s.update(id, model);
+return "Updated";
+}
+@DeleteMapping("/delete/{id}")
+public String delete(@PathVariable int id) {
+s.delete(id);
+return "Deleted";
+}
+}
+Repo:
+
+import org.springframework.data.jpa.repository.JpaRepository; public
+interface Repo extends JpaRepository<Modelclass,Integer> {
+}
+Service:
+@Service
+public class service {
+@Autowired
+Repo r;
+public String add(Modelclass m) {
+r.save(m);
+return "Added";
+}
+public List<Modelclass> getall(){
+return r.findAll();
+}
+public void update(int id, Modelclass model) { if
+(r.existsById(id)) {
+model.setId(id);
+r.save(model);
+}
+}
+public void delete(int id) {
+r.deleteById(id);
+}
+}
+*************************************2*****************************************
+Controller_Staff:
+public class Controller_Staff {
+@Autowired
+Serve_Staff s;
+@PostMapping("/create")
+public String create(@RequestBody Model_Staff m) {
+s.add(m);
+return "created sucessfully";
+}
+@GetMapping("/get")
+public List<Model_Staff> display(){
+return s.get_all();
+}
+@PutMapping("/update/{id}")
+public String update_user(@PathVariable int id, @RequestBody Model_Staff m){
+m.setEmp_id(id);
+return s.update_user(m);
+}
+@DeleteMapping("/delete/{id}")
+public String delete(@PathVariable int id) {
+s.delete(id);
+return "deleted Sucessfully";
+}
+}
+Model_Staff:
+@Entity
+@Table(name="Staff_detils")
+public class Model_Staff {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private int emp_id;
+private String name; private
+String department; private
+Long Salary; public int
+getEmp_id() {
+return emp_id;
+}
+public void setEmp_id(int emp_id) {
+this.emp_id = emp_id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getDepartment() {
+return department;
+}
+public void setDepartment(String department) {
+this.department = department;
+}
+public Long getSalary() {
+return Salary;
+}
+public void setSalary(Long salary) {
+Salary = salary;
+}
+}
+Repo_Admin:
+
+public interface Repo_Admin extends JpaRepository<Model_Staff,Integer>{
+}
+Serve_Staff:
+@Service
+public class Serve_Staff {
+@Autowired
+Repo_Admin r;
+public void add(Model_Staff m)
+{
+r.save(m);
+}
+public List<Model_Staff>get_all(){
+return r.findAll();
+}
+public void delete(int id) {
+r.deleteById(id);
+}
+public String update_user(Model_Staff m){
+r.save(m);
+return "Sucess";
+}
+}
+Project staff Authentication:
+Controller_Auth:
+@RestController
+public class Controller_Auth {
+@Autowired
+Serve_Auth s;
+@PostMapping("/register")
+public String create(@RequestBody Model_Auth m) {
+s.add(m);
+return "created sucessfully";
+}
+@Transactional
+@GetMapping("/get/{user_name}/{password}")
+public String get_By(@PathVariable String user_name,@PathVariable String password ) { return
+s.get_By(user_name,password);
+}
+}
+Model_Auth:
+@Entity
+@Table(name="Staff_Auth")
+public class Model_Auth {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private int id;
+private String user;
+private String pass;
+public int getId() {
+return id;
+}
+public void setId(int id) {
+this.id = id;
+}
+public String getUser() {
+return user;
+}
+public void setUser(String user) {
+this.user = user;
+}
+public String getPass() {
+return pass;
+}
+public void setPass(String pass) {
+this.pass= pass;
+}
+}
+Repo_Auth:
+public interface Repo_Auth extends JpaRepository<Model_Auth,Integer>{
+@Query("Select m from Model_Auth m Where m.user = :user_name")
+public Model_Auth get_By(String user_name);
+}
+Serve_Auth:
+@Service
+public class Serve_Auth {
+@Autowired
+Repo_Auth r;
+public void add(Model_Auth m)
+{
+r.save(m);
+}
+public String get_By(String user_name,String password) {
+Model_Auth a=r.get_By(user_name);
+if(a==null) {
+return "user_name does not match";
+}
+else if(a.getPass().equals(password)) {
+return "Login";
+}
+else {
+}
+}
+return "Password is wrong";
+}
+*************************************3*****************************************
+Model:
+@Entity
+@Table(name="products")
+public class Product {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
+private String name;
+private String category;
+private double price;
+public Long getId() {
+return id;
+}
+public void setId(Long id) {
+this.id = id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getCategory() {
+return category;
+}
+public void setCategory(String category) {
+this.category = category;
+}
+public double getPrice() {
+return price;
+}
+public void setPrice(double price) {
+this.price = price;
+}
+}
+Controller:
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+@Autowired
+private ProductService productService;
+@GetMapping
+public List<Product> getAllProducts() {
+return productService.getAllProducts();
+}
+@GetMapping("/{id}")
+public Product getProductById(@PathVariable Long id) {
+return productService.getProductById(id);
+}
+@PostMapping("/insert")
+public Product addProduct(@RequestBody Product product) {
+return productService.addProduct(product);
+}
+@PutMapping("/{id}")
+public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) { return
+productService.updateProduct(id, updatedProduct);
+}
+@DeleteMapping("/{id}")
+public void deleteProduct(@PathVariable Long id) {
+productService.deleteProduct(id);
+}
+}
+Repo:
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}
+Service:
+@Service
+public class ProductService {
+@Autowired
+private ProductRepository productRepository;
+public List<Product> getAllProducts() {
+return productRepository.findAll();
+}
+public Product getProductById(Long id) {
+return productRepository.findById(id).orElse(null);
+}
+public Product addProduct(Product product) {
+return productRepository.save(product);
+}
+public Product updateProduct(Long id, Product updatedProduct) { if
+(productRepository.existsById(id)) {
+updatedProduct.setId(id);
+return productRepository.save(updatedProduct);
+}
+return null;
+}
+public void deleteProduct(Long id) {
+productRepository.deleteById(id);
+}
+}
+*************************************4*****************************************
+Recipe.java: (Entity)
+@Entity
+public class Recipe {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
+private String name;
+private String chef;
+private Date yearOfCreation;
+private String cuisineType;
+public Recipe() {
+}
+public Recipe(String name, String chef, Date yearOfCreation, String cuisineType) { this.name
+= name;
+this.chef = chef;
+this.yearOfCreation = yearOfCreation;
+this.cuisineType = cuisineType;
+}
+public Long getId() {
+return id;
+}
+public void setId(Long id) {
+this.id = id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getChef() {
+return chef;
+}
+public void setChef(String chef) {
+this.chef = chef;
+}
+public Date getYearOfCreation() {
+return yearOfCreation;
+}
+public void setYearOfCreation(Date yearOfCreation) {
+this.yearOfCreation = yearOfCreation;
+}
+public String getCuisineType() {
+return cuisineType;
+}
+public void setCuisineType(String cuisineType) {
+this.cuisineType = cuisineType;
+}
+}
+RecipeController.java :
+@RestController
+@RequestMapping("/recipes")
+public class RecipeController {
+@Autowired
+private RecipeRepository recipeRepository;
+@PostMapping("/post")
+public Recipe addRecipe(@RequestBody Recipe recipe) {
+return recipeRepository.save(recipe);
+}
+@GetMapping("/{id}")
+public Optional<Recipe> getRecipeById(@PathVariable Long id) {
+return recipeRepository.findById(id);
+}
+@PutMapping("/{id}")
+public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe updatedRecipe) {
+updatedRecipe.setId(id); // Ensure ID consistency
+return recipeRepository.save(updatedRecipe);
+}
+@DeleteMapping("/{id}")
+public String deleteRecipe(@PathVariable Long id) {
+recipeRepository.deleteById(id);
+return "Value Deleted" ;
+}
+}
+RecipeRepository.java:
+public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+}
+Application.properties: spring.application.name=Project5
+spring.datasource.url=jdbc:mysql://localhost:3306/Project5
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.database=mysql
+spring.jpa.generate-ddl=true
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+*************************************5*****************************************
+
+
+
+
+
+
+
+
+
+
+
